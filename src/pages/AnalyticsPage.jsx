@@ -8,6 +8,7 @@ import FilterBar from '../components/common/FilterBar'
 import { mockAnalytics } from '../data/mockAnalytics'
 
 const PIE_COLORS = ['#c74634', '#d7dee8']
+const TASK_TYPE_PIE_COLORS = ['#dc2626', '#2563eb', '#7c3aed', '#0f766e']
 
 export default function AnalyticsPage() {
   const [developerFilter, setDeveloperFilter] = useState('all')
@@ -49,6 +50,27 @@ export default function AnalyticsPage() {
   const timeDeltaDirection = timeDeltaPct > 0 ? 'down' : 'up'
   const timeDeltaText = `${totals.estimatedHours}h vs ${totals.realHours}h`
 
+  const taskTypeTotals = useMemo(() => {
+    return filteredByDeveloper.reduce(
+      (acc, item) => {
+        acc.bug += item.bug
+        acc.feature += item.feature
+        acc.research += item.research
+        acc.documentation += item.documentation
+        return acc
+      },
+      { bug: 0, feature: 0, research: 0, documentation: 0 },
+    )
+  }, [filteredByDeveloper])
+
+  const totalTaskTypeCount = taskTypeTotals.bug + taskTypeTotals.feature + taskTypeTotals.research + taskTypeTotals.documentation
+  const taskTypePieData = [
+    { name: 'Debug', value: taskTypeTotals.bug },
+    { name: 'Feature', value: taskTypeTotals.feature },
+    { name: 'Research', value: taskTypeTotals.research },
+    { name: 'Documentation', value: taskTypeTotals.documentation },
+  ]
+
   const developerOptions = [
     { value: 'all', label: 'Team view' },
     ...mockAnalytics.developers.map((dev) => ({ value: dev.id, label: dev.name })),
@@ -84,6 +106,31 @@ export default function AnalyticsPage() {
         <KpiCard label="Reopened Completed Tasks" value={totals.reopened} icon={RotateCcw} accent="danger" trend={{ value: 'tasks marked done then reopened', direction: 'down' }} />
         <KpiCard label="Estimated vs Real Time" value={timeDeltaText} icon={Timer} accent="warning" trend={{ value: `${timeDeltaPct.toFixed(1)}% delta`, direction: timeDeltaDirection }} />
       </div>
+
+      <SectionCard title="Task Type Mix" subtitle="Distribucion por tipo de tarea dentro del periodo filtrado.">
+        <div className="task-type-grid">
+          <article className="task-type-item task-type-item--bug">
+            <p className="task-type-label">Bug</p>
+            <p className="task-type-value">{taskTypeTotals.bug}</p>
+            <p className="task-type-meta">{totalTaskTypeCount > 0 ? ((taskTypeTotals.bug / totalTaskTypeCount) * 100).toFixed(1) : '0'}%</p>
+          </article>
+          <article className="task-type-item task-type-item--feature">
+            <p className="task-type-label">Feature</p>
+            <p className="task-type-value">{taskTypeTotals.feature}</p>
+            <p className="task-type-meta">{totalTaskTypeCount > 0 ? ((taskTypeTotals.feature / totalTaskTypeCount) * 100).toFixed(1) : '0'}%</p>
+          </article>
+          <article className="task-type-item task-type-item--research">
+            <p className="task-type-label">Research</p>
+            <p className="task-type-value">{taskTypeTotals.research}</p>
+            <p className="task-type-meta">{totalTaskTypeCount > 0 ? ((taskTypeTotals.research / totalTaskTypeCount) * 100).toFixed(1) : '0'}%</p>
+          </article>
+          <article className="task-type-item task-type-item--documentation">
+            <p className="task-type-label">Documentation</p>
+            <p className="task-type-value">{taskTypeTotals.documentation}</p>
+            <p className="task-type-meta">{totalTaskTypeCount > 0 ? ((taskTypeTotals.documentation / totalTaskTypeCount) * 100).toFixed(1) : '0'}%</p>
+          </article>
+        </div>
+      </SectionCard>
 
       <div className="analytics-grid">
         <SectionCard title="Registered vs Finished by Developer" subtitle="Stacked bar chart (mock)">
@@ -139,6 +186,31 @@ export default function AnalyticsPage() {
                 <Line type="monotone" dataKey="registered" name="Registered" stroke="#2f4158" strokeWidth={2.5} />
                 <Line type="monotone" dataKey="completed" name="Finished" stroke="#c74634" strokeWidth={2.5} />
               </LineChart>
+            </ResponsiveContainer>
+          </div>
+        </SectionCard>
+
+        <SectionCard title="Task Type Distribution" subtitle="Pie chart por tipo de tarea: debug, feature, research y documentation.">
+          <div className="chart-box">
+            <ResponsiveContainer width="100%" height={290}>
+              <PieChart>
+                <Pie
+                  data={taskTypePieData}
+                  cx="50%"
+                  cy="50%"
+                  innerRadius={62}
+                  outerRadius={104}
+                  dataKey="value"
+                  nameKey="name"
+                  label
+                >
+                  {taskTypePieData.map((entry, index) => (
+                    <Cell key={entry.name} fill={TASK_TYPE_PIE_COLORS[index % TASK_TYPE_PIE_COLORS.length]} />
+                  ))}
+                </Pie>
+                <Tooltip />
+                <Legend />
+              </PieChart>
             </ResponsiveContainer>
           </div>
         </SectionCard>

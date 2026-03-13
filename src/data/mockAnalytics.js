@@ -6,10 +6,10 @@ export const mockAnalytics = {
 		{ id: 'dev-4', name: 'Lucia Herrera' },
 	],
 	tasksByDeveloper: [
-		{ developerId: 'dev-1', developer: 'Daniel Torres', registered: 36, completed: 24, reopened: 3, estimatedHours: 68, realHours: 75 },
-		{ developerId: 'dev-2', developer: 'Camila Ruiz', registered: 30, completed: 20, reopened: 2, estimatedHours: 57, realHours: 63 },
-		{ developerId: 'dev-3', developer: 'Andres Mora', registered: 27, completed: 18, reopened: 4, estimatedHours: 52, realHours: 60 },
-		{ developerId: 'dev-4', developer: 'Lucia Herrera', registered: 22, completed: 15, reopened: 1, estimatedHours: 43, realHours: 46 },
+		{ developerId: 'dev-1', developer: 'Daniel Torres', registered: 36, completed: 24, reopened: 3, estimatedHours: 68, realHours: 75, bug: 10, feature: 15, research: 5, documentation: 6 },
+		{ developerId: 'dev-2', developer: 'Camila Ruiz', registered: 30, completed: 20, reopened: 2, estimatedHours: 57, realHours: 63, bug: 8, feature: 12, research: 4, documentation: 6 },
+		{ developerId: 'dev-3', developer: 'Andres Mora', registered: 27, completed: 18, reopened: 4, estimatedHours: 52, realHours: 60, bug: 9, feature: 10, research: 4, documentation: 4 },
+		{ developerId: 'dev-4', developer: 'Lucia Herrera', registered: 22, completed: 15, reopened: 1, estimatedHours: 43, realHours: 46, bug: 6, feature: 9, research: 3, documentation: 4 },
 	],
 	tasksByDate: [
 		{ date: 'Mar 01', registered: 7, completed: 4, reopened: 1 },
